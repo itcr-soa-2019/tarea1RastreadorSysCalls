@@ -15,31 +15,65 @@ Integrantes: Fabiola Espinoza
 			 Esteban Leandro
 Tarea Corta 1: Rastreador de System Calls                                                            
 */
-
 #include <stdio.h>
 #include <unistd.h>
-#include <conio.h>
+#include <ncurses.h>
+#include <stdlib.h>
 
+
+void getSystemCall(int optind, int argc, char *argv[])
+{
+	nodelay(stdscr, FALSE);
+    int i;
+	int arraySize = (argc - optind) + 4;
+	char *straceArgs[arraySize];
+	straceArgs[0] = "strace";
+	/**
+	 * According to strace's manual page 
+	 * http://man7.org/linux/man-pages/man1/strace.1.html
+	*/
+	straceArgs[1] = "-f";
+	straceArgs[2] = "-c";
+	int argIndex = 3;
+    for (i = optind; i < argc; i++)
+    {
+	 	straceArgs[argIndex] = argv[i];
+		argIndex++;        
+    }
+	straceArgs[arraySize-1] = NULL;
+	execvp("strace", straceArgs);
+}
+
+/**
+ *  Main method
+*/
 int main(int argc, char *argv[])
 {
-	printf("Hello World");
+	
 	int opt;
-	while ((opt = getopt(argc, argv, "vV::")))
+	extern char *optarg;
+	extern int optind;
+	extern int optopt;
+	extern int opterr;
+
+	initscr();
+    cbreak();
+    noecho();
+    nodelay(stdscr, TRUE);
+	// Process the options 
+	while ((opt = getopt(argc, argv, "+v::V::")))
 	{
 		switch (opt)
 		{
 		case 'v':
-			printf("Selected option: v");
 			break;
 		case 'V':
-			while (!kbhit())
-			{
-				printf("You haven't pressed a key.\n");
-			}
-			printf("Selected option: V");
+				printf("Please press any key to continue\n\n");
+				getchar();
 			break;
+		case '?':
 		default:
-			printf("Default case");
+			/* TODO PRINT HELP*/
 			break;
 		}
 
@@ -48,4 +82,8 @@ int main(int argc, char *argv[])
 			break; // Exit while loop
 		}
 	}
+	endwin();	// End curses mode restore stdout formats
+	getSystemCall(optind, argc, argv);
+	
+	exit(0);
 }

@@ -6,7 +6,7 @@ SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
 
-LIBRARIES	:=
+LIBRARIES	:= -lncurses
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= main.exe
@@ -19,7 +19,10 @@ all: $(BIN)/$(EXECUTABLE)
 clean:
 	-$(RM) $(BIN)/$(EXECUTABLE)
 
-run: all
+packages:
+	sudo apt-get install libncurses-dev 
+
+run: all packages
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*
