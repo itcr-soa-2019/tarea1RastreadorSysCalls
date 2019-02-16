@@ -62,10 +62,12 @@ void getSystemCall(int optind, int argc, char *argv[])
 void usage() {
 	endwin();	// End curses mode restore stdout formats
 	nodelay(stdscr, FALSE);
-	printf("usage: rastrador [-vVh] PROG [ARGS]\n");
-	printf("Options: \n");
-	printf("-v Shows a message every time it detects a system call.\n");
-	printf("-V dentical to -v but it makes a pause until the user press a key.\n");
+	printf("*************************************************************************\n");
+	printf("* usage: rastrador [-vVh] PROG [ARGS]                                   *\n");
+	printf("* Options:                                                              *\n");
+	printf("*    -v Shows a message every time it detects a system call.            *\n");
+	printf("*    -V dentical to -v but it makes a pause until the user press a key. *\n");
+	printf("*************************************************************************\n");
 }
 
 /**
@@ -73,6 +75,11 @@ void usage() {
 */
 int main(int argc, char *argv[])
 {
+	if (argv[1] == NULL) { // no args present when calling rastreador
+    	usage();
+    	exit(0);
+    }
+
     // used by getopt function
 	int opt;
 	extern char *optarg; // if opt takes a value, it is stored in this pointer.
