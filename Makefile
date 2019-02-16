@@ -3,27 +3,24 @@ C_FLAGS := -Wall -Wextra
 
 BIN		:= bin
 SRC		:= src
-INCLUDE	:= include
-LIB		:= lib
-
 LIBRARIES	:= -lncurses
 
 ifeq ($(OS),Windows_NT)
-EXECUTABLE	:= main.exe
+EXECUTABLE	:= rastreador.exe
 else
-EXECUTABLE	:= main
+EXECUTABLE	:= rastreador
 endif
 
-all: $(BIN)/$(EXECUTABLE)
+all: install $(BIN)/$(EXECUTABLE) 
 
 clean:
 	-$(RM) $(BIN)/$(EXECUTABLE)
 
-packages:
+install:
 	sudo apt-get install libncurses-dev 
 
-run: all packages
+run: all 
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*
-	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+	$(CC) $(C_FLAGS) $^ -o $@ $(LIBRARIES)
